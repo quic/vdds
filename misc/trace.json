@@ -1,0 +1,23 @@
+{
+    "traceEvents": [
+        { "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.2", "ph": "X", "pid": "P1", "tid": "T1", "ts":  1, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts":  2, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.5", "ph": "X", "pid": "P1", "tid": "T2", "ts":  3, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts":  4, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.5", "ph": "X", "pid": "P1", "tid": "T3", "ts":  5, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts":  6, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.5", "ph": "X", "pid": "P1", "tid": "T1", "ts":  7, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts":  8, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.5", "ph": "X", "pid": "P1", "tid": "T1", "ts":  9, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts": 10, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.5", "ph": "X", "pid": "P1", "tid": "T1", "ts": 11, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts": 12, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::push", "dur": "0.5", "ph": "X", "pid": "P1", "tid": "T1", "ts": 13, "args" : { "vdds.domain": "DEFAULT"} },
+	{ "name": "/qride/stack/sensor/CAM0", "cat": "vdds::pop",  "dur": "0.5", "ph": "X", "pid": "P2", "tid": "T1", "ts": 14, "args" : { "vdds.domain": "DEFAULT"} }
+    ],
+    "displayTimeUnit": "ns",
+    "otherData": {
+          "version": "My Application v1.0"
+    }
+
+}
