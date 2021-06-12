@@ -1,6 +1,6 @@
-string(REPLACE "@libdir@/cmake/vdds" "" _vdds_prefix ${CMAKE_CURRENT_LIST_DIR})
-set(_vdds_include_dir ${_vdds_prefix}@includedir@)
-set(_vdds_library_dir ${_vdds_prefix}@libdir@)
+string(REPLACE "lib/cmake/vdds" "" _vdds_prefix ${CMAKE_CURRENT_LIST_DIR})
+set(_vdds_include_dir ${_vdds_prefix}/include)
+set(_vdds_library_dir ${_vdds_prefix}/lib)
 
 if(TARGET vdds)
     return()
@@ -8,9 +8,9 @@ endif()
 
 add_library(vdds INTERFACE IMPORTED)
 target_include_directories(vdds INTERFACE ${_vdds_include_dir})
-target_link_libraries(vdds INTERFACE ${_vdds_library_dir}/libvdds.so)
+target_link_libraries(vdds INTERFACE ${_vdds_library_dir}/libvdds.so.@VDDS_MAJOR_VERSION@)
 
-set(VDDS_VERSION "@CONF_VERSION@")
+set(VDDS_VERSION "@VDDS_VERSION@")
 set(VDDS_LIBRARIES vdds)
 
 message(STATUS "VDDS version: ${VDDS_VERSION}   : ${_vdds_prefix}")

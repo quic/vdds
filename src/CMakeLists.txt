@@ -23,6 +23,7 @@ add_library(vdds SHARED ${VDDS_HPP}
 target_include_directories(vdds PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(vdds PUBLIC hogl)
 
+set_target_properties(vdds PROPERTIES SOVERSION ${VDDS_MAJOR_VERSION})
 set_target_properties(vdds PROPERTIES VERSION ${VDDS_VERSION})
 
 install(TARGETS vdds DESTINATION lib COMPONENT dev)

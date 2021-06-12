@@ -4,10 +4,9 @@ project(vdds LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# FIXME: set these from Git
 set(VDDS_MAJOR_VERSION 1)
 set(VDDS_MINOR_VERSION 0)
-set(VDDS_PATCH_VERSION 0)
+set(VDDS_PATCH_VERSION 1)
 set(VDDS_VERSION "${VDDS_MAJOR_VERSION}.${VDDS_MINOR_VERSION}.${VDDS_PATCH_VERSION}")
 
 # Set default pref to /usr (unless user provided an override)
@@ -27,18 +26,13 @@ if (WITH_TESTS)
 	add_subdirectory(tests)
 endif()
 
-set(CONF_VERSION "${VDDS_VERSION}")
-set(CONF_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
-set(CONF_LIBRARY_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 configure_file(vdds-config.cmake.in
 	"${PROJECT_BINARY_DIR}/vdds-config.cmake" @ONLY)
-configure_file(vdds-config.cmake.in
-	"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vdds-config.cmake" @ONLY)
 configure_file(vdds-config-version.cmake.in
 	"${PROJECT_BINARY_DIR}/vdds-config-version.cmake" @ONLY)
 
 install(FILES
-	"${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/vdds-config.cmake"
+	"${PROJECT_BINARY_DIR}/vdds-config.cmake"
 	"${PROJECT_BINARY_DIR}/vdds-config-version.cmake"
 	DESTINATION lib/cmake/vdds COMPONENT dev)
 
