@@ -47,3 +47,8 @@ cmake -j
 ctest -j
 ```
 
+## License
+
+SPDX-License-Identifier: BSD-3-Clause
+
+See [LICENSE](LICENSE) for the full license text.
