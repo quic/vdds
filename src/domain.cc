@@ -72,25 +72,54 @@ topic* domain::create_topic(const std::string& name, const std::string& data_typ
 	return t;
 }
 
+// T is unique_ptr<topic> in the functions below
+template <typename T>
+static inline bool filter_match(const query::filter& flt, const T& t)
+{
+	if (flt.topic_name != "any" && flt.topic_name != t->name())
+		return false;
+	if (flt.data_type != "any" && flt.data_type != t->data_type())
+		return false;
+	return true;
+}
+
+static inline bool filter_any(const query::filter& flt)
+{
+	return (flt.topic_name == "any" && flt.data_type == "any");
+}
+
 void domain::dump(const query::filter& flt)
 {
 	std::shared_lock<std::shared_timed_mutex> lock(_mutex); // read-only shared
 
-	if (flt.topic_name == "any" && flt.data_type == "any") {
+	if (filter_any(flt)) {
 		// Full dump with all topics and data types
 		hogl::post(_area, _area->INFO, hogl::arg_gstr("ntopics %u"), _topics.size());
 		for (auto &t : _topics) t->dump();
-		return;
+	} else {
+		// Filtered dump
+		for (auto &t : _topics) { if (filter_match(flt, t)) t->dump(); }
 	}
+}
 
-	// Filtered dump
-	for (auto &t: _topics) {
-		if (flt.topic_name != "any" && flt.topic_name != t->name())
-			continue;
-		if (flt.data_type != "any" && flt.data_type != t->data_type())
-			continue;
-		t->dump();
+void domain::kick(const query::filter& flt)
+{
+	std::shared_lock<std::shared_timed_mutex> lock(_mutex); // read-only shared
+
+	if (filter_any(flt)) {
+		// Kick all topics
+		for (auto &t : _topics) t->kick();
+	} else  {
+		// Kick topics that match the filter
+		for (auto &t : _topics) { if (filter_match(flt, t)) t->kick(); }
 	}
+}
+
+void domain::shutdown(std::chrono::nanoseconds fto)
+{
+	std::shared_lock<std::shared_timed_mutex> lock(_mutex); // read-only shared
+
+	for (auto &t : _topics) t->shutdown(fto);
 }
 
 void domain::query(query::domain_info& di, const query::filter& flt)
@@ -100,7 +129,7 @@ void domain::query(query::domain_info& di, const query::filter& flt)
 
 	std::shared_lock<std::shared_timed_mutex> lock(_mutex); // read-only shared
 
-	if (flt.topic_name == "any" && flt.data_type == "any") {
+	if (filter_any(flt)) {
 		// Full output with all topics and data types
 		di.topics.resize(_topics.size());
 		for (unsigned i=0; i<_topics.size(); i++) _topics[i]->query(di.topics[i]);
@@ -110,10 +139,8 @@ void domain::query(query::domain_info& di, const query::filter& flt)
 	// Filtered output
 	unsigned int i = 0;
 	for (auto &t: _topics) {
-		if (flt.topic_name != "any" && flt.topic_name != t->name())
-			continue;
-		if (flt.data_type != "any" && flt.data_type != t->data_type())
-			continue;
+		if (!filter_match(flt, t)) continue;
+
 		di.topics.resize(i + 1);
 		t->query(di.topics[i]);
 		i++;

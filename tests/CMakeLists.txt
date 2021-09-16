@@ -17,3 +17,7 @@ add_test(NAME shared COMMAND shared-test)
 add_executable(multi-test test-skell.hpp multi-test.cc)
 target_link_libraries(multi-test boost_program_options vdds)
 add_test(NAME multi COMMAND multi-test)
+
+add_executable(shutdown-test test-skell.hpp shutdown-test.cc)
+target_link_libraries(shutdown-test boost_program_options vdds)
+add_test(NAME shutdown COMMAND shutdown-test)

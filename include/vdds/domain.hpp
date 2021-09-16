@@ -33,6 +33,7 @@
 
 #include <string>
 #include <vector>
+#include <chrono>
 #include <shared_mutex>
 
 #include <hogl/area.hpp>
@@ -83,6 +84,19 @@ public:
 
 	/// Dump domain info & stats into debug log.
 	void dump(const query::filter& flt = query::filter{"any","any"});
+
+	/// Kick topics.
+	/// Wakeup all subscribers to the topics matching the filer.
+	/// @param[in] flt query filter
+	void kick(const query::filter& flt = query::filter{"any","any"});
+
+	/// Shutdown the domain.
+	/// Shutdown all topics and wakeup all subscribers.
+	/// Force all topic notifiers to override their timeouts to the specified value
+	/// This method is designed for speeding up the shutdown sequence of a complex
+	/// domain with many subscribers that use long timeouts.
+	/// @param t timeout (chrono duration)
+	void shutdown(std::chrono::nanoseconds t = std::chrono::milliseconds(1));
 
 	/// Query domain info & stats.
 	/// To avoid runtime overhead the caller should preallocate query info (@see vdds::query::init)

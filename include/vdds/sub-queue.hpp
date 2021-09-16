@@ -88,8 +88,16 @@ public:
 	uint32_t push_count() const { return _push_count; }
 	uint32_t drop_count() const { return _drop_count; }
 
+	/// Kick queue.
+	void kick(bool need_lock = false)
+	{
+		// CV notifier will do condition signal, noop otherwise
+		if (_notifier)
+			_notifier->notify();
+	}
+
 	/// Push data.
-	/// Lockfree and nonblocking.
+	/// Lockfree and nonblocking for single-publisher case.
 	/// @param[in] d ref to data
 	void push(const data &d, bool need_lock = false)
 	{
@@ -101,9 +109,7 @@ public:
 
 		if (need_lock) _mutex.unlock();
 
-		// CV notifier will do condition signal, noop otherwise
-		if (_notifier)
-			_notifier->notify();
+		return kick(need_lock);
 	}
 
 	/// Pop data.
@@ -113,6 +119,13 @@ public:
 	bool pop(data &d)
 	{
 		return _fifo.pop(d);
+	}
+
+	/// Shutdown queue
+	void shutdown(std::chrono::nanoseconds t, bool need_lock = false)
+	{
+		if (_notifier)
+			_notifier->shutdown(t);
 	}
 };
 

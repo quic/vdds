@@ -64,6 +64,11 @@ public:
 	/// Notify.
 	/// Called from queue::push
 	virtual void notify() {};
+
+	/// Shutdown.
+	/// Called from queue::shutdown
+	/// @param t new timeout value
+	virtual void shutdown(std::chrono::nanoseconds t = std::chrono::milliseconds(1)) {};
 };
 
 /// Polling notifier.
@@ -83,19 +88,20 @@ public:
 /// Signals cv to wakeup subscriber.
 class notifier_cv : public notifier {
 private:
-	std::condition_variable _cv; ///> condition variable
-	std::mutex _mutex;           ///> mutex for sync
-	uint32_t   _count;           ///> number of triggers
+	std::condition_variable  _cv; ///> condition variable
+	std::chrono::nanoseconds _ft; ///> forced timeout (during shutdown)
+	std::mutex _mutex;            ///> mutex for sync
+	uint32_t   _count;            ///> number of triggers
 
 public:
-	notifier_cv() : notifier("cv"), _count(0) {}
+	notifier_cv() : notifier("cv"), _ft(0), _count(0) {}
 
 	/// Wait for contion signal or timeout.
-	/// @param[in] t timeoue (chrono duration)
+	/// @param[in] t timeout (chrono duration)
 	void wait_for(std::chrono::nanoseconds t) override
 	{
     		std::unique_lock<std::mutex> ul(_mutex);
-		_cv.wait_for(ul, t, [&]{return _count;});
+		_cv.wait_for(ul, _ft.count() ? _ft : t, [&]{return _count;});
 		_count = 0;
 	}
 
@@ -104,9 +110,21 @@ public:
 	void notify() override
 	{
 		_mutex.lock();
-        	_count++;
+		_count++;
 		_mutex.unlock();
-    		_cv.notify_one();
+		_cv.notify_one();
+	}
+
+	/// Wake up subscriber and set new timeout.
+	/// Called from queue::shutdown.
+	/// @param[in] t timeout (chrono duration)
+	void shutdown(std::chrono::nanoseconds ft) override
+	{
+		_mutex.lock();
+		_count++;
+		_ft = ft;
+		_mutex.unlock();
+		_cv.notify_one();
 	}
 };
 

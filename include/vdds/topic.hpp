@@ -90,6 +90,9 @@ private:
 	/// Atomically swap cache pointer and release the orignal
 	void cache_swap(cache *n);
 
+	// Lock is needed only if this topic has multiple publishers
+	bool need_lock(const cache* c) const { return c->pubs.size() > 1; }
+
 public:
 	/// Create topic
 	/// @param[in] domain domain name
@@ -152,13 +155,10 @@ public:
 		hogl::post(_area, _area->TRACE, hogl::arg_gstr(ph->trace_fmt()),
 				d.seqno, d.timestamp, c->subs.size(), c->pubs.size());
 
-		// We need to lock only if this topic has multiple publishers
-		bool need_lock = (c->pubs.size() > 1);
+		bool nl = need_lock(c);
 
-		for (auto &q : c->subs) {
-			// Push creates a proper copy of shared_ptr data (if any)
-			q->push(d, need_lock);
-		}
+		// Push into each queue, creates proper copy of shared data (if any)
+		for (auto &q : c->subs) { q->push(d, nl); }
 
 		// Release cache reference
 		cache_put(c);
@@ -174,6 +174,24 @@ public:
 
 		hogl::post(_area, _area->TRACE, hogl::arg_gstr(sq->trace_fmt()), d.seqno, d.timestamp);
 		return true;
+	}
+
+	/// Kick (wakeup) all subscribers.
+	void kick()
+	{
+		auto *c = cache_get();
+		for (auto &q : c->subs) { q->kick(need_lock(c)); }
+		cache_put(c);
+	}
+
+	/// Shutdown topic
+	/// Wakeup all subscribers, and override timeouts on notifiers
+	/// @param[in] t new timeout for notifiers
+	void shutdown(std::chrono::nanoseconds t)
+	{
+		auto *c = cache_get();
+		for (auto &q : c->subs) { q->shutdown(t, need_lock(c)); }
+		cache_put(c);
 	}
 };
 
