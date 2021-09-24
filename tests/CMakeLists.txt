@@ -21,3 +21,9 @@ add_test(NAME multi COMMAND multi-test)
 add_executable(shutdown-test test-skell.hpp shutdown-test.cc)
 target_link_libraries(shutdown-test boost_program_options vdds)
 add_test(NAME shutdown COMMAND shutdown-test)
+
+add_executable(query-test test-skell.hpp query-test.cc)
+target_link_libraries(query-test boost_program_options vdds)
+add_test(NAME query COMMAND query-test)
+
+

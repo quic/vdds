@@ -40,8 +40,8 @@ void init(topic_info& ti, size_t nsubs, size_t npubs)
 {
 	ti.name.reserve(128);
 	ti.data_type.reserve(128);
-	ti.subs.reserve(nsubs);
-	ti.pubs.reserve(npubs);
+	ti.subs.resize(nsubs);
+	ti.pubs.resize(npubs);
 	for (auto &si : ti.subs)
 		si.name.reserve(128);
 	for (auto &pi : ti.pubs)
@@ -51,7 +51,7 @@ void init(topic_info& ti, size_t nsubs, size_t npubs)
 void init(domain_info& di, size_t ntopics, size_t nsubs, size_t npubs)
 {
 	di.name.reserve(128);
-	di.topics.reserve(ntopics);
+	di.topics.resize(ntopics);
 	for (auto &ti : di.topics)
 		init(ti, nsubs, npubs);
 }
