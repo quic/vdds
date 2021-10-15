@@ -124,7 +124,6 @@ void domain::shutdown(std::chrono::nanoseconds fto)
 
 void domain::query(query::domain_info& di, const query::filter& flt)
 {
-	query::clear(di);
 	di.name = _name;
 
 	std::shared_lock<std::shared_timed_mutex> lock(_mutex); // read-only shared

@@ -80,8 +80,6 @@ private:
 		vdds::query::init(di, 100, 10, 10);
 
 		while (!_killed) {
-			hogl::post(_area, _area->DEBUG, hogl::arg_gstr("query-prep: ntopics %u"), di.topics.size());
-			vdds::query::clear(di);
 			hogl::post(_area, _area->DEBUG, hogl::arg_gstr("query-start: ntopics %u"), di.topics.size());
 			_vd.query(di, { _topic, "any" });
 			hogl::post(_area, _area->DEBUG, hogl::arg_gstr("query-done: ntopics %u"), di.topics.size());
