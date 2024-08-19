@@ -1,4 +1,4 @@
-//  Copyright (c) 2021, Qualcomm Innovation Center, Inc. All rights reserved.
+//  Copyright (c) 2021-2024, Qualcomm Innovation Center, Inc. All rights reserved.
 //
 //  Redistribution and use in source and binary forms, with or without
 //  modification, are permitted provided that the following conditions are met:
@@ -33,19 +33,18 @@
 
 #include <atomic>
 
-#include <boost/lockfree/spsc_queue.hpp>
-
+#include "detail/spsc-queue.hpp"
 #include "data.hpp"
 #include "notifier.hpp"
 
 namespace vdds {
 
 /// Subscriber queue.
-/// Simple single-read/write fifo based on boost::spsc_queue.
+/// Simple single-read/write fifo based on vdds::spsc_queue.
 /// This queue is allocated for each subscriber for each topic.
 class sub_queue {
 private:
-	boost::lockfree::spsc_queue<data> _fifo; ///> queue backend
+	vdds::spsc_queue<data> _fifo;  ///> queue backend
 	uint32_t        _drop_count;   ///> number of dropped push ops (queue was full)
 	uint32_t        _push_count;   ///> number of push ops
 	vdds::notifier* _notifier;     ///> notifier pointer
@@ -54,9 +53,9 @@ private:
 	const std::string  _data_type; ///> data type name
 	size_t             _capacity;  ///> queue capacity
 
-	std::mutex _mutex; ///> mutex used for multi-publisher push
+	std::mutex         _mutex;     ///> mutex used for multi-publisher push
 
-	const char* _trace_fmt; ///> trace format string
+	const char*        _trace_fmt; ///> trace format string
 
 public:
 	/// Create subscriber queue

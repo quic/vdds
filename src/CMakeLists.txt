@@ -1,4 +1,5 @@
 set(VDDS_HPP
+	${PROJECT_SOURCE_DIR}/include/vdds/detail/spsc-queue.hpp
 	${PROJECT_SOURCE_DIR}/include/vdds/data.hpp
 	${PROJECT_SOURCE_DIR}/include/vdds/domain.hpp
 	${PROJECT_SOURCE_DIR}/include/vdds/topic.hpp
